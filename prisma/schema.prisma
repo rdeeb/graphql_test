@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(255)
+  slug      String    @db.VarChar(25) @default("")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? @db.Timestamp(6)
+  users     User[]
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @db.VarChar(30) @default("")
+  email     String   @db.VarChar(255) @unique
+  password  String   @db.VarChar(40)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tenantId  Int
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  tasks     Task[]
+}
+
+model TaskStatus {
+  id           Int                  @id @default(autoincrement())
+  name         String               @db.VarChar(25)
+  fromStatuses TaskStatusWorkflow[] @relation("fromStatuses")
+  toStatuses   TaskStatusWorkflow[] @relation("toStatuses")
+  Task         Task[]
+}
+
+model TaskStatusWorkflow {
+  id         Int        @id @default(autoincrement())
+  from       Int
+  to         Int
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  fromStatus TaskStatus @relation("fromStatuses", fields: [from], references: [id])
+  toStatus   TaskStatus @relation("toStatuses", fields: [to], references: [id])
+}
+
+model Task {
+  id          Int        @id @default(autoincrement())
+  name        String     @db.VarChar(255)
+  description String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  statusId    Int
+  status      TaskStatus @relation(fields: [statusId], references: [id])
+  userId      Int
+  user        User       @relation(fields: [userId], references: [id])
+}

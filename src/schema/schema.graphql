@@ -1,0 +1,50 @@
+type Tenant {
+  id: ID!
+  name: String!
+}
+
+type User {
+  id: ID!
+  email: String!
+  tenant: Tenant
+}
+
+type TaskStatus {
+  id: ID!
+  name: String!
+  toStatuses: [TaskStatus]
+}
+
+type Task {
+  id: ID!
+  name: String!
+  description: String
+  status: TaskStatus
+  user: User
+}
+
+input CreateTaskInput {
+  name: String!
+  description: String
+  statusId: ID!
+  userId: ID!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type LoginPayload {
+  token: String!
+  user: User!
+}
+
+type Query {
+  getTasks: [Task]
+}
+
+type Mutation {
+  createTask(input: CreateTaskInput!): Task
+  login(input: LoginInput!): LoginPayload
+}
