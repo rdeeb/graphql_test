@@ -35,6 +35,7 @@ model User {
 model TaskStatus {
   id           Int                  @id @default(autoincrement())
   name         String               @db.VarChar(25)
+  isInitial    Boolean              @default(false)
   fromStatuses TaskStatusWorkflow[] @relation("fromStatuses")
   toStatuses   TaskStatusWorkflow[] @relation("toStatuses")
   Task         Task[]

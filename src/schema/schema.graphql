@@ -12,6 +12,7 @@ type User {
 type TaskStatus {
   id: ID!
   name: String!
+  isInitial: Boolean!
   toStatuses: [TaskStatus]
 }
 
@@ -26,8 +27,13 @@ type Task {
 input CreateTaskInput {
   name: String!
   description: String
-  statusId: ID!
-  userId: ID!
+  userId: Int!
+}
+
+input UpdateTaskInput {
+  name: String
+  description: String
+  statusId: Int
 }
 
 input LoginInput {
@@ -42,9 +48,11 @@ type LoginPayload {
 
 type Query {
   getTasks: [Task]
+  getStatuses: [TaskStatus]
 }
 
 type Mutation {
   createTask(input: CreateTaskInput!): Task
+  updateTask(id: Int!, input: UpdateTaskInput!): Task
   login(input: LoginInput!): LoginPayload
 }

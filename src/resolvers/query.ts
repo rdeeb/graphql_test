@@ -1,40 +1,13 @@
 import * as loaders from '../loaders.js';
-
-type Tenant = {
-  id: number;
-  name: string;
-}
-
-type User = {
-  id: number;
-  email: string;
-  tenant: Tenant;
-}
-
-type TaskStatus = {
-  id: number;
-  name: string;
-  toStatuses: Array<TaskStatus>;
-}
-
-type Task = {
-  id: number;
-  name: string;
-  description: string;
-  userId: number;
-  statusId: number;
-  status: TaskStatus;
-  user: User;
-}
+import { User, Task, TaskStatus } from '../schema/types.js';
 
 export default {
   Query: {
-    getTasks: async (
-      ___parent: unknown,
-      ___args: unknown,
-      context: any,
-    ): Promise<Array<Partial<Task>>> => {
+    getTasks: async (): Promise<Array<Partial<Task>>> => {
       return await loaders.getTasks(1);
+    },
+    getStatuses: async (): Promise<Array<Partial<TaskStatus>>> => {
+      return await loaders.getTaskStatuses();
     }
   },
   Task: {
@@ -56,10 +29,9 @@ export default {
   TaskStatus: {
     toStatuses: async (
       status: TaskStatus,
-      ___args: unknown,
-      context: any,
     ): Promise<Array<Partial<TaskStatus>>> => {
-      return loaders.getTaskStatusesFromTo(status.id);
+      const workflowStatuses = await loaders.getTaskStatusesFrom(status.id);
+      return workflowStatuses.map((status) => status.toStatus);
     }
   }
 }
