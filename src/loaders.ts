@@ -1,9 +1,28 @@
 import { PrismaClient } from '@prisma/client';
+import jwt from 'jsonwebtoken';
+import { User } from './schema/types.js';
 
 const prisma = new PrismaClient();
 
-export const getTenants = async () => {
-  return await prisma.tenant.findMany();
+export const getTenant = async (id: number) => {
+  return await prisma.tenant.findUnique({
+    where: {
+      id,
+    }
+  });
+}
+
+export const getUserFromToken = async (token: string): Promise<User> => {
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  if (decoded) {
+    const user = await getUserById((decoded as any).user.id);
+    if (user) {
+      return user;
+    } else {
+      throw new Error('Invalid token');
+    }
+  }
+  throw new Error('Invalid token');
 }
 
 export const getUserByEmail = async (email: string) => {
@@ -22,10 +41,10 @@ export const getUserById = async (id: number) => {
   });
 }
 
-export const getTasks = async (userId: number) => {
+export const getTasks = async (tenantId: number) => {
   return await prisma.task.findMany({
     where: {
-      userId,
+      tenantId,
     },
     include: {
       user: true,
@@ -83,13 +102,17 @@ export const validateTaskStatusFromTo = async (fromStatusId: number, toStatusId:
   return status !== null;
 }
 
-export const createTask = async (name: string, description: string, userId: number) => {
+export const createTask = async (name: string, description: string, userId: number, tenantId: number) => {
   const initialStatus = await getInitialStatus();
+  if (!initialStatus) {
+    throw new Error('DB not initialised');
+  }
   return await prisma.task.create({
     data: {
       name,
       description,
       userId,
+      tenantId,
       statusId: initialStatus.id,
     }
   });
@@ -103,6 +126,7 @@ export const updateTask = async (
 ) => {
   const task = await getTaskById(taskId);
   const data: any = {};
+
   if (name) {
     data.name = name;
   }
@@ -112,6 +136,7 @@ export const updateTask = async (
   if (statusId && await validateTaskStatusFromTo(task.statusId, statusId)) {
     data.statusId = statusId;
   }
+
   return await prisma.task.update({
     where: {
       id: taskId,

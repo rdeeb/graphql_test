@@ -18,6 +18,7 @@ model Tenant {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime? @db.Timestamp(6)
   users     User[]
+  tasks     Task[]
 }
 
 model User {
@@ -57,6 +58,8 @@ model Task {
   description String
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+  tenantId    Int        @default(0)
+  tenant      Tenant     @relation(fields: [tenantId], references: [id])
   statusId    Int
   status      TaskStatus @relation(fields: [statusId], references: [id])
   userId      Int

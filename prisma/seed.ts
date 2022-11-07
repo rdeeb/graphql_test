@@ -7,6 +7,7 @@ async function main() {
     {
       id: 1,
       name: 'To Do',
+      isInitial: true,
     },
     {
       id: 2,

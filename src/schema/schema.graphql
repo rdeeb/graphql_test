@@ -5,6 +5,7 @@ type Tenant {
 
 type User {
   id: ID!
+  username: String!
   email: String!
   tenant: Tenant
 }
@@ -21,13 +22,15 @@ type Task {
   name: String!
   description: String
   status: TaskStatus
+  createdAt: String
+  updatedAt: String
   user: User
+  tenant: Tenant
 }
 
 input CreateTaskInput {
   name: String!
   description: String
-  userId: Int!
 }
 
 input UpdateTaskInput {

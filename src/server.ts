@@ -3,6 +3,7 @@ import { startStandaloneServer } from '@apollo/server/standalone';
 
 import schema from './schema.js';
 import resolvers from './resolvers.js';
+import { getUserFromToken } from './loaders.js';
 
 const server = new ApolloServer({
   typeDefs: schema,
@@ -13,7 +14,10 @@ const { url } = await startStandaloneServer(server, {
   listen: { port: 4000 },
   context: async ({ req }) => {
     const token = req.headers.authorization || '';
-    return { token };
+    if (token) {
+      const user = await getUserFromToken(token);
+      return { user };
+    }
   },
 });
 

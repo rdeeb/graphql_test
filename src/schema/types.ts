@@ -5,7 +5,9 @@ export type Tenant = {
 
 export type User = {
   id: number;
+  username: string;
   email: string;
+  tenantId: number;
 }
 
 export type TaskStatus = {
@@ -21,14 +23,15 @@ export type Task = {
   description: string;
   userId: number;
   statusId: number;
+  tenantId: number;
   status: Partial<TaskStatus>;
   user: User;
+  tenant: Tenant;
 }
 
 export type CreateTaskInput = {
   name: string;
   description: string;
-  userId: number;
 }
 
 export type UpdateTaskInput = {
@@ -37,3 +40,12 @@ export type UpdateTaskInput = {
   statusId: number;
 }
 
+export type LoginInput = {
+  email: string;
+  password: string;
+}
+
+export type LoginPayload = {
+  token: string;
+  user: User;
+}
