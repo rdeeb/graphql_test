@@ -1,8 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from './prisma';
 import jwt from 'jsonwebtoken';
-import { User } from './schema/types.js';
-
-const prisma = new PrismaClient();
+import { User } from './schema/types';
 
 export const getTenant = async (id: number) => {
   return await prisma.tenant.findUnique({

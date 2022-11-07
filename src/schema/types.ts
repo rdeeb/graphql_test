@@ -35,9 +35,9 @@ export type CreateTaskInput = {
 }
 
 export type UpdateTaskInput = {
-  name: string;
-  description: string;
-  statusId: number;
+  name?: string;
+  description?: string;
+  statusId?: number;
 }
 
 export type LoginInput = {

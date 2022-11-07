@@ -1,10 +1,10 @@
-import * as loaders from '../loaders.js';
+import * as loaders from '../loaders';
 import {
   User,
   Task,
   TaskStatus,
   Tenant
-} from '../schema/types.js';
+} from '../schema/types';
 
 export default {
   Query: {

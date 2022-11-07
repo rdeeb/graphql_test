@@ -1,4 +1,4 @@
-import * as loaders from '../loaders.js';
+import * as loaders from '../loaders';
 import {
   CreateTaskInput,
   LoginInput,
@@ -6,7 +6,7 @@ import {
   Task,
   UpdateTaskInput,
   User,
-} from '../schema/types.js';
+} from '../schema/types';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 

@@ -1,5 +1,5 @@
-import Query from './resolvers/query.js';
-import Mutation from './resolvers/mutations.js';
+import Query from './resolvers/query';
+import Mutation from './resolvers/mutations';
 
 export default {
   ...Query,

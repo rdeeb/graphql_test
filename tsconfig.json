@@ -12,7 +12,8 @@
     "isolatedModules": false,
     "noImplicitAny": true,
     "useUnknownInCatchVariables": false,
-    "inlineSourceMap": true
+    "inlineSourceMap": true,
+    "allowSyntheticDefaultImports": true
   },
   "ts-node": {
     "esm": true
